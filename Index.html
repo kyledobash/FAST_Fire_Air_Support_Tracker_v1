@@ -20,10 +20,21 @@
           
                 function initMap() {
                   map = new google.maps.Map(document.getElementById("map"), {
-                    center: { lat: -34.397, lng: 150.644 },
+                    center: { },
                     zoom: 8,
                   });
-                }
+                  
+                  navigator.geolocation.getCurrentPosition(
+                    function( position ){ // success cb
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        map.setCenter({lat: lat, lng: lng})                  
+                    },
+                    function(){ // fail cb
+                        map.setCenter({lat: ,lng: })
+                    }
+                  );
+              }
         </script>
     </head>
     <body>
