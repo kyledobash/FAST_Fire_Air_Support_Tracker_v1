@@ -21,7 +21,7 @@
                 function initMap() {
                   map = new google.maps.Map(document.getElementById("map"), {
                     center: { },
-                    zoom: 8,
+                    zoom: 16,
                   });
                   
                   navigator.geolocation.getCurrentPosition(
@@ -31,7 +31,7 @@
                         map.setCenter({lat: lat, lng: lng})                  
                     },
                     function(){ // fail cb
-                        map.setCenter({lat: ,lng: })
+                        map.setCenter({lat: 40.730522,lng: -74.002205})
                     }
                   );
               }
