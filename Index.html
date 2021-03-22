@@ -39,6 +39,10 @@
                       style: google.maps.MapTypeControlStyle.DEFAULT,
                       }
                     });
+
+                    map.addListener('click', function (e) {
+                    placeMarker(e.latLng, map);            
+                    });
                     
                     navigator.geolocation.getCurrentPosition(
                       function( position ){ // success cb
@@ -67,6 +71,28 @@
                           map.setCenter({lat: 40.730522,lng: -74.002205})
                       }
                     );
+                  }
+
+                  var targetCounter = 0;
+                  function placeMarker(position, map) {
+                      var marker = new google.maps.Marker({
+                          position: position,
+                          map: map
+                      });
+
+                      marker.addListener("click", () => {
+                          infowindow.open(map, marker);
+                      });
+
+                      map.panTo(position);
+
+                      targetCounter++;
+                      var currentlat = marker.getPosition().lat();
+                      var currrentlng = marker.getPosition().lng();
+                      const infowindow = new google.maps.InfoWindow({
+                          //change this line to inclue elevation and mgrs
+                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currrentlng) + "</b></div>",
+                      });
                   }
 
                   function MGRSString(Lat, Long) {
