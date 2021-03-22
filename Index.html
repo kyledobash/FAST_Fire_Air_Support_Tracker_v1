@@ -78,20 +78,37 @@
                       var marker = new google.maps.Marker({
                           position: position,
                           map: map
-                      });
+                      });                      
 
                       marker.addListener("click", () => {
                           infowindow.open(map, marker);
                       });
 
-                      map.panTo(position);
+
+                      map.panTo(position);  
 
                       targetCounter++;
                       var currentlat = marker.getPosition().lat();
-                      var currrentlng = marker.getPosition().lng();
+                      var currentlng = marker.getPosition().lng();
+
+                      //  TESTING
+                      // const Http = new XMLHttpRequest();
+                      // const url='https://maps.googleapis.com/maps/api/elevation/json?locations=' + currentlat + ',' + currentlng + '&key=';
+                      // Http.open("GET", url);
+                      // Http.send();
+
+                      // Http.onreadystatechange = (e) => {
+                      //   console.log(Http.responseText)
+                      //   var json = JSON.parse(Http.responseText);
+                      //   var results = json.results;
+                      //   var elevation = results["results"][0]["elevation"];
+                      //   console.log(elevation);
+                      // }
+                      //  END TESTING
+
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
-                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currrentlng) + "</b></div>",
+                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</b></div>",
                       });
                   }
 
