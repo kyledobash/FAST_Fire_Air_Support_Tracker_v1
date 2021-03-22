@@ -18,6 +18,19 @@
               color: green;
               font-size: medium;
             }
+            #titlespot {
+              text-align: center;
+              position: relative;
+              font-family: Verdana, Geneva, Tahoma, sans-serif;
+              color: white;
+              background-image: url("https://cdn.wallpapersafari.com/25/63/p7d93q.jpg") !important;
+              background-position: center;
+              height: 100px;
+            }
+            h1, h4 {
+              margin-top: 0px;
+              margin-bottom: 0px;
+            }
         </style>
         <script>
                 let map;
@@ -149,6 +162,10 @@
         </script>
     </head>
     <body>
+      <div id="titlespot">
+        <h1>F.A.S.T</h1>
+        <h4>Fire and Air Support Tracker</h4>
+      </div>
         <div id="map"></div>
         <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5cmiT0yzh3-tqOqIEOf4G5nPrUT7iOAQ&callback=initMap&libraries=&v=weekly"
