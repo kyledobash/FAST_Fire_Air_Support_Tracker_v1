@@ -87,7 +87,8 @@
                               map: map,
                               icon: {
                                   url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-                              }
+                              },
+                              animation: google.maps.Animation.DROP
                             });
 
                             marker.addListener("click", () => {
@@ -107,7 +108,8 @@
                   function placeMarker(position, map) {
                       var marker = new google.maps.Marker({
                           position: position,
-                          map: map
+                          map: map,
+                          animation: google.maps.Animation.DROP
                       });                      
 
                       marker.addListener("click", () => {
@@ -124,7 +126,6 @@
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
                           content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</b></div>",
-
                       });
 
                       id = marker.__gm_id
