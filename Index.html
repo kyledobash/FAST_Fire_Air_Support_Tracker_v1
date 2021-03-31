@@ -26,10 +26,24 @@
               background-image: url("https://cdn.wallpapersafari.com/25/63/p7d93q.jpg") !important;
               background-position: center;
               height: 100px;
+              border-bottom: 2px solid rgb(0, 128, 255);
             }
             h1, h4 {
               margin-top: 0px;
               margin-bottom: 0px;
+              font-size: 250%;
+              -webkit-animation: glow 1s ease-in-out infinite alternate;
+              -moz-animation: glow 1s ease-in-out infinite alternate;
+              animation: glow 1s ease-in-out infinite alternate;
+            }
+
+            @-webkit-keyframes glow {
+              from {
+                text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 8px #000066, 0 0 16px #000066, 0 0 24px #000066, 0 0 32px #000066, 0 0 40px #000066;
+              }
+              to {
+                text-shadow: 0 0 2px #fff, 0 0 4px #000066, 0 0 8px #000066, 0 0 16px #000066, 0 0 24px #000066, 0 0 32px #000066, 0 0 40px #000066;
+              }
             }
         </style>
         <script>
@@ -103,21 +117,6 @@
                       targetCounter++;
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
-
-                      //  TESTING
-                      // const Http = new XMLHttpRequest();
-                      // const url='https://maps.googleapis.com/maps/api/elevation/json?locations=' + currentlat + ',' + currentlng + '&key=';
-                      // Http.open("GET", url);
-                      // Http.send();
-
-                      // Http.onreadystatechange = (e) => {
-                      //   console.log(Http.responseText)
-                      //   var json = JSON.parse(Http.responseText);
-                      //   var results = json.results;
-                      //   var elevation = results["results"][0]["elevation"];
-                      //   console.log(elevation);
-                      // }
-                      //  END TESTING
 
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
