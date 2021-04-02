@@ -79,7 +79,7 @@
                           
                           const infowindow = new google.maps.InfoWindow({
                             //change this line to inclue elevation and mgrs
-                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " + MGRSString(lat, lng) + "</br> Elevation: " + await getElevation(lat,lng) + "</b></div>",
+                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " + MGRSString(lat, lng) + "</br> Elevation: " + await metersToFeet(await getElevation(lat,lng)) + " ft/MSL</b></div>",
                           });
 
                           var marker = new google.maps.Marker({
@@ -125,7 +125,7 @@
 
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
-                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " + await getElevation(currentlat,currentlng) + "</b></div>",
+                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " + await metersToFeet(await getElevation(currentlat,currentlng)) + " ft/MSL</b></div>",
                       });
 
                       id = marker.__gm_id
@@ -180,6 +180,10 @@
                     const response = await fetch(url);
                     const data = await response.json();
                     return data["results"][0]["elevation"]
+                  }
+
+                  async function metersToFeet(meters) {
+                    return Math.round(meters * 3.2808);
                   }
         </script>
     </head>
