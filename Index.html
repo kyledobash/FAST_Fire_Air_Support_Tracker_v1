@@ -72,14 +72,14 @@
                     });
                     
                     navigator.geolocation.getCurrentPosition(
-                      function( position ){ // success cb
+                      async function( position ){ // success cb
                           var lat = position.coords.latitude;
                           var lng = position.coords.longitude;
                           map.setCenter({lat: lat, lng: lng})
                           
                           const infowindow = new google.maps.InfoWindow({
                             //change this line to inclue elevation and mgrs
-                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " + MGRSString(lat, lng) + "</b>",
+                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " + MGRSString(lat, lng) + "</br> Elevation: " + await getElevation(lat,lng) + "</b></div>",
                           });
 
                           var marker = new google.maps.Marker({
