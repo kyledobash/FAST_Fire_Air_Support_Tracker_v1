@@ -129,7 +129,7 @@
                             + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
                             + await metersToFeet(await getElevation(currentlat,currentlng)) 
                             + " ft/MSL</b></div></br>"
-                            // + "Distance: " + distanceInMeters,
+                            // + "Distance: " + distanceBetween(marker),
                       });
 
                       id = marker.__gm_id
@@ -190,12 +190,8 @@
                     return Math.round(meters * 3.2808);
                   }
 
-                  function distanceBetween(friendly, tgt) {
-                    var distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(
-                        tgt.getPosition(),
-                        friendly.getPosition()
-                      );
-                    return distanceInMeters;
+                  function distanceBetween(tgt) {
+                    
                   }
         </script>
     </head>
