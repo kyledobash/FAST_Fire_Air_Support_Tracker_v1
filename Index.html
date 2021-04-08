@@ -128,11 +128,13 @@
 
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
-                          content: "<div class='target' style='color:red'><u><b>Target " 
-                            + targetCounter + ":</u></br>Grid: " + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
+                          content: "<div class='target' style='color:red'><u><b><center>TARGET " 
+                            + targetCounter + "</center>Grid: </u><div class='griddata' align='center'>" + MGRSString(currentlat, currentlng) + "</div><u>Elevation:</u> <div class='elevationdata' align='center'>" 
                             + await metersToFeet(await getElevation(currentlat,currentlng)) 
-                            + " ft/MSL"
-                             + "</br>Distance: " + distanceBetweenMeters(currentlat, currentlng) + " meters</b></div>",                            
+                            + " ft/MSL</div>"
+                             + "<u>Distance:</u> <div class='distancedata' align='center'>" + distanceBetweenMeters(currentlat, currentlng) 
+                             + " meters</div>" + "<u>Direction:</u> <div class='directiondata' align='center'>" + getDirection(currentlat, currentlng) + "° grid"
+                             + "</br>" + degreesToMils(getDirection(currentlat, currentlng)) + " mils grid</b></div></div>",                            
                       });
 
                       id = marker.__gm_id
@@ -193,6 +195,11 @@
                     return Math.round(meters * 3.2808);
                   }
 
+                  function degreesToMils(degrees) {
+                    var mils = Math.round(degrees * 17.777778);
+                    return mils;
+                  }
+
                   function distanceBetweenMeters(lat2, lon2) {
                     lat1 = friendlyPos[0];
                     lon1 = friendlyPos[1];
@@ -220,7 +227,7 @@
                     }
                   }
 
-                  function angleFromCoordinate(lat2, long2) {
+                  function getDirection(lat2, long2) {
                       lat1 = friendlyPos[0];
                       long1 = friendlyPos[1]; 
 
@@ -231,11 +238,13 @@
 
                       var brng = Math.atan2(y, x);
 
-                      brng = Math.toDegrees(brng);
+                      // brng = Math.toDegrees(brng);
+                      brng = brng * (180.0 / Math.PI);
                       brng = (brng + 360) % 360;
                       brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
+                      roundedBrng = brng.toFixed(2);
 
-                      return brng;
+                      return roundedBrng;
                   }
         </script>
     </head>
