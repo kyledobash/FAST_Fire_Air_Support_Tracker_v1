@@ -129,7 +129,7 @@
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
                           content: "<div class='target' style='color:red'><u><b>Target " 
-                            + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
+                            + targetCounter + ":</u></br>Grid: " + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
                             + await metersToFeet(await getElevation(currentlat,currentlng)) 
                             + " ft/MSL"
                              + "</br>Distance: " + distanceBetweenMeters(currentlat, currentlng) + " meters</b></div>",                            
@@ -218,6 +218,24 @@
 
                       return roundedDist;
                     }
+                  }
+
+                  function angleFromCoordinate(lat2, long2) {
+                      lat1 = friendlyPos[0];
+                      long1 = friendlyPos[1]; 
+
+                      var dLon = (long2 - long1);
+
+                      var y = Math.sin(dLon) * Math.cos(lat2);
+                      var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+                      var brng = Math.atan2(y, x);
+
+                      brng = Math.toDegrees(brng);
+                      brng = (brng + 360) % 360;
+                      brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
+
+                      return brng;
                   }
         </script>
     </head>
