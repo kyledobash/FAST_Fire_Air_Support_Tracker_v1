@@ -6,8 +6,7 @@
         <style type="text/css">
             #map {
               height: 100%;
-            }
-      
+            }      
             html,
             body {
               height: 100%;
@@ -36,7 +35,6 @@
               -moz-animation: glow 1s ease-in-out infinite alternate;
               animation: glow 1s ease-in-out infinite alternate;
             }
-
             @-webkit-keyframes glow {
               from {
                 text-shadow: 0 0 2px #fff, 0 0 4px #fff, 0 0 8px #000066, 0 0 16px #000066, 0 0 24px #000066, 0 0 32px #000066, 0 0 40px #000066;
@@ -79,10 +77,12 @@
                           
                           const infowindow = new google.maps.InfoWindow({
                             //change this line to inclue elevation and mgrs
-                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " + MGRSString(lat, lng) + "</br> Elevation: " + await metersToFeet(await getElevation(lat,lng)) + " ft/MSL</b></div>",
+                            content: "<b><u>*** FRIENDLY POSITION ***</u></br> Grid: " 
+                              + MGRSString(lat, lng) + "</br> Elevation: " 
+                              + await metersToFeet(await getElevation(lat,lng)) + " ft/MSL</b></div>",
                           });
 
-                          var marker = new google.maps.Marker({
+                          var friendlyMarker = new google.maps.Marker({
                               position: {lat: lat, lng: lng},
                               map: map,
                               icon: {
@@ -91,8 +91,8 @@
                               animation: google.maps.Animation.DROP
                             });
 
-                            marker.addListener("click", () => {
-                            infowindow.open(map, marker);
+                            friendlyMarker.addListener("click", () => {
+                            infowindow.open(map, friendlyMarker);
                         });
                       },
                       function(){ // fail cb
@@ -123,9 +123,16 @@
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
 
+                      var distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(
+                        marker.getPosition(),
+                        markerB.getPosition()
+                      );
+
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
-                          content: "<div class='target' style='color:red'><u><b>Target " + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " + await metersToFeet(await getElevation(currentlat,currentlng)) + " ft/MSL</b></div>",
+                          content: "<div class='target' style='color:red'><u><b>Target " 
+                            + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
+                            + await metersToFeet(await getElevation(currentlat,currentlng)) + " ft/MSL</b></div>",
                       });
 
                       id = marker.__gm_id
@@ -184,6 +191,10 @@
 
                   async function metersToFeet(meters) {
                     return Math.round(meters * 3.2808);
+                  }
+
+                  function distanceBetweenTwoMarkers() {
+
                   }
         </script>
     </head>
