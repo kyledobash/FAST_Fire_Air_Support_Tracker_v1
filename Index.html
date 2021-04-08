@@ -123,16 +123,13 @@
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
 
-                      var distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(
-                        marker.getPosition(),
-                        markerB.getPosition()
-                      );
-
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
                           content: "<div class='target' style='color:red'><u><b>Target " 
                             + targetCounter + ":</u></br>" + MGRSString(currentlat, currentlng) + "</br> Elevation: " 
-                            + await metersToFeet(await getElevation(currentlat,currentlng)) + " ft/MSL</b></div>",
+                            + await metersToFeet(await getElevation(currentlat,currentlng)) 
+                            + " ft/MSL</b></div></br>"
+                            // + "Distance: " + distanceInMeters,
                       });
 
                       id = marker.__gm_id
@@ -193,8 +190,12 @@
                     return Math.round(meters * 3.2808);
                   }
 
-                  function distanceBetweenTwoMarkers() {
-
+                  function distanceBetween(friendly, tgt) {
+                    var distanceInMeters = google.maps.geometry.spherical.computeDistanceBetween(
+                        tgt.getPosition(),
+                        friendly.getPosition()
+                      );
+                    return distanceInMeters;
                   }
         </script>
     </head>
