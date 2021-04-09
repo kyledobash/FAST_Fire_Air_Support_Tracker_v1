@@ -78,14 +78,14 @@
                           friendlyPos.push(lng);
                           map.setCenter({lat: lat, lng: lng})
 
-                          currentMGRS = MGRSString(lat, lng);
-                          currentElevation = await metersToFeet(await getElevation(lat,lng));
+                          var friendlyMGRS = MGRSString(lat, lng);
+                          var friendlyElevation = await metersToFeet(await getElevation(lat,lng));
                           
                           const infowindow = new google.maps.InfoWindow({
                             //change this line to inclue elevation and mgrs
                             content: "<b><u>*** FRIENDLY POSITION ***</br> Grid:</u> <div class='friendlygrid' align='center'>" 
-                              + currentMGRS + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
-                              + currentElevation + " ft/MSL</b></div></div>",
+                              + friendlyMGRS + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
+                              + friendlyElevation + " ft/MSL</b></div></div>",
                           });
 
                           var friendlyMarker = new google.maps.Marker({
@@ -129,15 +129,21 @@
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
 
+                      var tgtMGRS = MGRSString(currentlat, currentlng);
+                      var tgtElevation = await metersToFeet(await getElevation(currentlat,currentlng));
+                      var tgtDistance = distanceBetweenMeters(currentlat, currentlng);
+                      var tgtDegrees = getDirection(currentlat, currentlng);
+                      var tgtMils = degreesToMils(getDirection(currentlat, currentlng));
+
                       const infowindow = new google.maps.InfoWindow({
                           //change this line to inclue elevation and mgrs
                           content: "<div class='target' style='color:red'><u><b><center>TARGET " 
-                            + targetCounter + "</center>Grid: </u><div class='griddata' align='center'>" + MGRSString(currentlat, currentlng) + "</div><u>Elevation:</u> <div class='elevationdata' align='center'>" 
-                            + await metersToFeet(await getElevation(currentlat,currentlng)) 
+                            + targetCounter + "</center>Grid: </u><div class='griddata' align='center'>" + tgtMGRS + "</div><u>Elevation:</u> <div class='elevationdata' align='center'>" 
+                            + tgtElevation 
                             + " ft/MSL</div>"
-                             + "<u>Distance:</u> <div class='distancedata' align='center'>" + distanceBetweenMeters(currentlat, currentlng) 
-                             + " meters</div>" + "<u>Direction:</u> <div class='directiondata' align='center'>" + getDirection(currentlat, currentlng) + "° grid"
-                             + "</br>" + degreesToMils(getDirection(currentlat, currentlng)) + " mils grid</b></div></div>",                            
+                             + "<u>Distance:</u> <div class='distancedata' align='center'>" + tgtDistance 
+                             + " meters</div>" + "<u>Direction:</u> <div class='directiondata' align='center'>" + tgtDegrees + "° grid"
+                             + "</br>" + tgtMils + " mils grid</b></div></div>",                            
                       });
 
                       id = marker.__gm_id
