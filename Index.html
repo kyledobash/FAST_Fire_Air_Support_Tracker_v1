@@ -82,7 +82,6 @@
                           var friendlyElevation = await metersToFeet(await getElevation(lat,lng));
                           
                           const infowindow = new google.maps.InfoWindow({
-                            //change this line to inclue elevation and mgrs
                             content: "<b><u>*** FRIENDLY POSITION ***</br> Grid:</u> <div class='friendlygrid' align='center'>" 
                               + friendlyMGRS + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
                               + friendlyElevation + " ft/MSL</b></div></div>",
@@ -108,8 +107,8 @@
                   }
 
 
-                  var id;
-                  var markers = {};
+                  var uniqueid = 1;
+                  var markers = [];
                   var targetCounter = 0;
                   async function placeMarker(position, map) {
                       var marker = new google.maps.Marker({
@@ -128,6 +127,8 @@
                       targetCounter++;
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
+                      marker.id = uniqueid;
+                      uniqueid++;                      
 
                       var tgtMGRS = MGRSString(currentlat, currentlng);
                       var tgtElevation = await metersToFeet(await getElevation(currentlat,currentlng));
@@ -136,7 +137,6 @@
                       var tgtMils = degreesToMils(getDirection(currentlat, currentlng));
 
                       const infowindow = new google.maps.InfoWindow({
-                          //change this line to inclue elevation and mgrs
                           content: "<div class='target' style='color:red'><u><b><center>TARGET " 
                             + targetCounter + "</center>Grid: </u><div class='griddata' align='center'>" + tgtMGRS + "</div><u>Elevation:</u> <div class='elevationdata' align='center'>" 
                             + tgtElevation 
@@ -146,10 +146,10 @@
                              + "</br>" + tgtMils + " mils grid</b></div></div>",                            
                       });
 
-                      id = marker.__gm_id
-                      markers[id] = marker; 
+                      markers.push(marker);
+                      console.log (marker.id);
 
-                      google.maps.event.addListener(marker, "rightclick", function (point) { id = this.__gm_id; delMarker(id) });
+                      google.maps.event.addListener(marker, "rightclick", function (point) { id = this.id; delMarker(id) });
                   }
 
                   function MGRSString(Lat, Long) {
@@ -188,8 +188,13 @@
                   };
 
                   var delMarker = function (id) {
-                      marker = markers[id]; 
-                      marker.setMap(null);
+                    console.log("attempting to delete") 
+                    for (var i = 0; i < markers.length; i++) {
+                      if (markers[i].id == id) {
+                        markers[i].setMap(null);
+                        markers.splice(i,1);
+                      }
+                    }
                   }
 
                   async function getElevation(lat, lng) {
@@ -247,10 +252,9 @@
 
                       var brng = Math.atan2(y, x);
 
-                      // brng = Math.toDegrees(brng);
                       brng = brng * (180.0 / Math.PI);
                       brng = (brng + 360) % 360;
-                      brng = 360 - brng; // count degrees counter-clockwise - remove to make clockwise
+                      brng = 360 - brng;
                       roundedBrng = brng.toFixed(2);
 
                       return roundedBrng;
