@@ -77,12 +77,15 @@
                           friendlyPos.push(lat);
                           friendlyPos.push(lng);
                           map.setCenter({lat: lat, lng: lng})
+
+                          currentMGRS = MGRSString(lat, lng);
+                          currentElevation = await metersToFeet(await getElevation(lat,lng));
                           
                           const infowindow = new google.maps.InfoWindow({
                             //change this line to inclue elevation and mgrs
                             content: "<b><u>*** FRIENDLY POSITION ***</br> Grid:</u> <div class='friendlygrid' align='center'>" 
-                              + MGRSString(lat, lng) + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
-                              + await metersToFeet(await getElevation(lat,lng)) + " ft/MSL</b></div></div>",
+                              + currentMGRS + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
+                              + currentElevation + " ft/MSL</b></div></div>",
                           });
 
                           var friendlyMarker = new google.maps.Marker({
