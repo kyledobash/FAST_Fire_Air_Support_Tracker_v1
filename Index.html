@@ -93,8 +93,9 @@
                               icon: {
                                   url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
                               },
-                              animation: google.maps.Animation.DROP
                             });
+
+                            infowindow.open(map, friendlyMarker);
 
                             friendlyMarker.addListener("click", () => {
                             infowindow.open(map, friendlyMarker);
@@ -105,7 +106,6 @@
                       }
                     );
                   }
-
 
                   var uniqueid = 1;
                   var markers = [];
