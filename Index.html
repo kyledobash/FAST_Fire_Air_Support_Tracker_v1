@@ -48,6 +48,7 @@
                 let map;
                 let friendlyPos = [];
           
+                // INITIALIZATION MAP SETTINGS
                 function initMap() {
                     map = new google.maps.Map(document.getElementById("map"), {
                       center: { },
@@ -70,6 +71,7 @@
                     placeMarker(e.latLng, map);            
                     });                    
                     
+                    // REQUESTS USER'S GEOLOCATION, CENTERS MAP
                     navigator.geolocation.getCurrentPosition(
                       async function( position ){ // success cb
                           let lat = position.coords.latitude;
@@ -78,15 +80,18 @@
                           friendlyPos.push(lng);
                           map.setCenter({lat: lat, lng: lng})
 
+                          // CONVERTS USER'S POSITION TO MGRS, REQUESTS ELEVATION
                           var friendlyMGRS = MGRSString(lat, lng);
                           var friendlyElevation = await metersToFeet(await getElevation(lat,lng));
                           
+                          //POPULATES INFO WINDOW
                           const infowindow = new google.maps.InfoWindow({
                             content: "<b><u>*** FRIENDLY POSITION ***</br> Grid:</u> <div class='friendlygrid' align='center'>" 
                               + friendlyMGRS + "</div> <u>Elevation:</u> <div class='friendlyelevation' align='center'>" 
                               + friendlyElevation + " ft/MSL</b></div></div>",
                           });
 
+                          // SELECTS GREEN MARKER
                           var friendlyMarker = new google.maps.Marker({
                               position: {lat: lat, lng: lng},
                               map: map,
@@ -95,18 +100,21 @@
                               },
                             });
 
+                            // OPENS INFO WINDOW UPON INITIALIZATION
                             infowindow.open(map, friendlyMarker);
 
                             friendlyMarker.addListener("click", () => {
                             infowindow.open(map, friendlyMarker);
                         });
                       },
+                      // IF GEOLOCATION FAILS
                       function(){ // fail cb
                           map.setCenter({lat: 40.730522,lng: -74.002205})
                       }
                     );
                   }
 
+                  // ASSIGNS A UNIQUE ID TO EACH TARGET POINT
                   var uniqueid = 1;
                   var markers = [];
                   var targetCounter = 0;
@@ -121,26 +129,28 @@
                           infowindow.open(map, marker);
                       });
 
-
+                      // CENTERS MAP ON TGT POINT
                       map.panTo(position);  
 
+                      // REQUESTS AND ASSIGNS ALL DATA FOR EACH TARGET POINT
                       targetCounter++;
                       var currentlat = marker.getPosition().lat();
                       var currentlng = marker.getPosition().lng();
                       marker.id = uniqueid;
                       uniqueid++;                      
-
                       var tgtMGRS = MGRSString(currentlat, currentlng);
                       var tgtElevation = await metersToFeet(await getElevation(currentlat,currentlng));
                       var tgtDistance = dangerClose(distanceBetweenMeters(currentlat, currentlng));
                       var tgtDegrees = getDirection(currentlat, currentlng);
                       var tgtMils = degreesToMils(getDirection(currentlat, currentlng));
 
+                      // CHECKS FOR DANGER CLOSE
                       if (tgtDistance < 600) {
                         dangerClose(tgtDistance);
                         tgtDistance += "</br> * DANGER CLOSE *"
                       }
 
+                      // POPULATES TARGET INFO WINDOW
                       const infowindow = new google.maps.InfoWindow({
                           content: "<div class='target' style='color:red'><u><b><center>TARGET " 
                             + targetCounter + "</center>Grid: </u><div class='griddata' align='center'>" + tgtMGRS + "</div><u>Elevation:</u> <div class='elevationdata' align='center'>" 
@@ -151,13 +161,14 @@
                              + "</br>" + tgtMils + " mils grid</b></div></div>",                            
                       });
 
+                      // ADDS TARGET MARKER TO LIST OF MARKERS OR MANAGEMENT
                       infowindow.open(map, marker);
                       markers.push(marker);
-                      console.log (marker.id);
 
                       google.maps.event.addListener(marker, "rightclick", function (point) { id = this.id; delMarker(id) });
                   }
 
+                  // CONVERTS LAT LONG COORDS TO MGRS COORDS
                   function MGRSString(Lat, Long) {
                   if (Lat < -80) return 'Too far South'; if (Lat > 84) return 'Too far North';
                   var c = 1 + Math.floor((Long + 180) / 6);
@@ -193,6 +204,7 @@
                   return c + ad + ' ' + af + ah + ' ' + aa + ' ' + ab;
                   };
 
+                  // REMOVES TGT MARKER
                   var delMarker = function (id) {
                     console.log("attempting to delete") 
                     for (var i = 0; i < markers.length; i++) {
@@ -203,6 +215,7 @@
                     }
                   }
 
+                  // ELEVATION GET REQUEST FROM OPEN ELEVATION THIRD-PARTY API
                   async function getElevation(lat, lng) {
                     let url = "https://api.open-elevation.com/api/v1/lookup?locations=" + String(lat) + "," + String(lng);
                     
@@ -211,6 +224,7 @@
                     return data["results"][0]["elevation"]
                   }
 
+                  // UNIT CONVERSIONS
                   async function metersToFeet(meters) {
                     return Math.round(meters * 3.2808);
                   }
@@ -220,6 +234,7 @@
                     return mils;
                   }
 
+                  // CALCULATES DISTANCE BETWEEN FRIENDLY POS A INPUT LAT LONG COORDS
                   function distanceBetweenMeters(lat2, lon2) {
                     lat1 = friendlyPos[0];
                     lon1 = friendlyPos[1];
@@ -247,6 +262,7 @@
                     }
                   }
 
+                  // GETS DIRECTION IN DEGREES FROM FRIENDLY POS TO TARGET POINT
                   function getDirection(lat2, long2) {
                       lat1 = friendlyPos[0];
                       long1 = friendlyPos[1]; 
@@ -266,6 +282,7 @@
                       return roundedBrng;
                   }
 
+                  // CHECKS FOR DANGER CLOSE AND WARNS USER IF NECESSARY
                   function dangerClose(distance) {
                     if (distance < 600) {
                       var result = window.alert('** WARNING DANGER CLOSE ** \n This target is ' + distance + ' meters away from your position.')
